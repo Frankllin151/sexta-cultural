@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sexta Cultural — Barcelona/RN</title>
+<meta name="description" content="Sexta Cultural de Barcelona-RN: música ao vivo, forró e festa para toda a família, toda sexta-feira.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#150a29;
+    --night-2:#0b0518;
+    --card:#1f1140;
+    --pink:#ff3d81;
+    --blue:#29e0ff;
+    --green:#4dff9a;
+    --amber:#ffb020;
+    --ink:#f4eeff;
+    --ink-dim:#b9aed6;
+  }
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--night);
+    color:var(--ink);
+    font-family:'Poppins',sans-serif;
+    overflow-x:hidden;
+  }
+  .font-brush{font-family:'Permanent Marker',cursive;}
+
+  /* glow blobs */
+  .blob{
+    position:absolute;
+    border-radius:9999px;
+    filter:blur(70px);
+    opacity:.55;
+    animation:drift 9s ease-in-out infinite;
+  }
+  @keyframes drift{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(20px,-25px) scale(1.12);}
+  }
+  @keyframes flicker{
+    0%,19%,21%,23%,80%,100%{opacity:1;}
+    20%,22%,79%{opacity:.55;}
+  }
+  .flicker{animation:flicker 5.5s infinite;}
+
+  .brush-title{
+    text-shadow:
+      0 0 12px rgba(255,61,129,.65),
+      0 0 34px rgba(41,224,255,.35);
+  }
+
+  .stroke-underline{
+    position:relative;
+    display:inline-block;
+  }
+  .stroke-underline svg{
+    position:absolute;
+    left:-6%; right:-6%; bottom:-0.35em;
+    width:112%;
+    height:0.5em;
+  }
+
+  .ticket-card{
+    background:linear-gradient(160deg, var(--card), #150a29 80%);
+    border:1px solid rgba(255,255,255,.08);
+  }
+
+  .marquee-track{
+    display:flex;
+    width:max-content;
+    animation:marquee 22s linear infinite;
+  }
+  @keyframes marquee{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  .nav-link{position:relative;}
+  .nav-link::after{
+    content:'';
+    position:absolute; left:0; bottom:-4px;
+    height:2px; width:0;
+    background:linear-gradient(90deg,var(--pink),var(--blue));
+    transition:width .25s ease;
+  }
+  .nav-link:hover::after{width:100%;}
+
+  #mobileMenu{transition:max-height .3s ease, opacity .3s ease;}
+
+  .light-dot{
+    position:absolute;
+    border-radius:9999px;
+    box-shadow:0 0 18px 6px currentColor;
+  }
+
+  .grain{
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events:none;
+    mix-blend-mode:overlay;
+  }
+
+  .btn-glow{
+    box-shadow:0 0 0 rgba(255,176,32,0);
+    transition:box-shadow .25s ease, transform .2s ease;
+  }
+  .btn-glow:hover{
+    box-shadow:0 0 26px rgba(255,176,32,.55);
+    transform:translateY(-2px);
+  }
+
+  ::selection{background:var(--pink); color:#fff;}
+
+  @media (prefers-reduced-motion: reduce){
+    .blob,.flicker,.marquee-track{animation:none !important;}
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- NAV -->
+<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-[#0b0518]/70 border-b border-white/5">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#topo" class="font-brush text-xl sm:text-2xl tracking-wide" style="color:var(--ink)">
+      Sexta <span style="color:var(--pink)">Cultural</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-[color:var(--ink-dim)]">
+      <a href="#sobre" class="nav-link hover:text-white">Sobre</a>
+      <a href="#programacao" class="nav-link hover:text-white">Programação</a>
+      <a href="#local" class="nav-link hover:text-white">Local</a>
+      <a href="#contato" class="nav-link hover:text-white">Contato</a>
+    </nav>
+    <a href="#local" class="hidden md:inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold btn-glow" style="background:var(--amber); color:#1a0d00">
+      📍 Como chegar
+    </a>
+    <button id="menuBtn" aria-label="Abrir menu" aria-expanded="false" class="md:hidden text-2xl leading-none">☰</button>
+  </div>
+  <div id="mobileMenu" class="md:hidden max-h-0 overflow-hidden opacity-0 bg-[#0b0518]/95 border-t border-white/5">
+    <div class="flex flex-col px-5 py-4 gap-4 text-[color:var(--ink-dim)] font-medium">
+      <a href="#sobre" class="mobile-link">Sobre</a>
+      <a href="#programacao" class="mobile-link">Programação</a>
+      <a href="#local" class="mobile-link">Local</a>
+      <a href="#contato" class="mobile-link">Contato</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="topo" class="relative min-h-[100svh] flex items-center pt-16 overflow-hidden">
+  <div class="blob w-72 h-72 -top-10 -left-10" style="background:var(--pink)"></div>
+  <div class="blob w-80 h-80 top-1/3 right-0" style="background:var(--blue); animation-delay:2s"></div>
+  <div class="blob w-64 h-64 bottom-0 left-1/4" style="background:var(--green); animation-delay:4s"></div>
+
+  <div class="light-dot flicker w-3 h-3 top-24 left-[12%]" style="color:var(--pink)"></div>
+  <div class="light-dot flicker w-2 h-2 top-40 right-[18%]" style="color:var(--blue); animation-delay:1.2s"></div>
+  <div class="light-dot flicker w-2.5 h-2.5 bottom-32 left-[20%]" style="color:var(--green); animation-delay:.6s"></div>
+  <div class="light-dot flicker w-2 h-2 bottom-20 right-[28%]" style="color:var(--amber); animation-delay:1.8s"></div>
+  <div class="grain"></div>
+
+  <div class="relative max-w-6xl mx-auto px-5 sm:px-8 w-full grid md:grid-cols-[1.2fr_1fr] gap-10 items-center">
+    <div>
+      <p class="uppercase tracking-[0.3em] text-xs sm:text-sm font-semibold mb-4" style="color:var(--green)">Todo mês em uma sexta-feira &middot; Ao ar livre &middot; Entrada gratuita</p>
+      <h1 class="font-brush leading-[0.95] brush-title text-[15vw] sm:text-6xl md:text-7xl">
+        <span class="block" style="color:var(--ink)">Sexta</span>
+        <span class="stroke-underline block" style="color:var(--pink)">
+          Cultural
+          <svg viewBox="0 0 300 20" preserveAspectRatio="none"><path d="M2 12 C 60 2, 140 18, 298 8" stroke="var(--blue)" stroke-width="6" fill="none" stroke-linecap="round"/></svg>
+        </span>
+      </h1>
+      <p class="mt-5 text-lg sm:text-xl font-semibold" style="color:var(--ink)">Barcelona <span style="color:var(--amber)">— RN</span></p>
+      <p class="mt-4 max-w-md text-[color:var(--ink-dim)]">
+        Música ao vivo, forró de raiz e a praça tomada pela alegria do povo barcelonense.
+        Traga a família, chame os amigos: a sexta é cultural.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="#programacao" class="btn-glow inline-flex items-center gap-2 rounded-full px-6 py-3 font-bold" style="background:var(--amber); color:#1a0d00">
+          🎶 Ver programação
+        </a>
+        <a href="#local" class="inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold border border-white/20 hover:bg-white/10 transition">
+          📍 Localização
+        </a>
+      </div>
+
+      <div id="countdown" class="mt-10 grid grid-cols-4 gap-3 max-w-sm">
+        <div class="ticket-card rounded-xl py-3 text-center">
+          <p id="cd-days" class="text-2xl font-extrabold" style="color:var(--pink)">--</p>
+          <p class="text-[10px] uppercase tracking-wide text-[color:var(--ink-dim)]">dias</p>
+        </div>
+        <div class="ticket-card rounded-xl py-3 text-center">
+          <p id="cd-hours" class="text-2xl font-extrabold" style="color:var(--blue)">--</p>
+          <p class="text-[10px] uppercase tracking-wide text-[color:var(--ink-dim)]">horas</p>
+        </div>
+        <div class="ticket-card rounded-xl py-3 text-center">
+          <p id="cd-mins" class="text-2xl font-extrabold" style="color:var(--green)">--</p>
+          <p class="text-[10px] uppercase tracking-wide text-[color:var(--ink-dim)]">min</p>
+        </div>
+        <div class="ticket-card rounded-xl py-3 text-center">
+          <p id="cd-secs" class="text-2xl font-extrabold" style="color:var(--amber)">--</p>
+          <p class="text-[10px] uppercase tracking-wide text-[color:var(--ink-dim)]">seg</p>
+        </div>
+      </div>
+      <p class="mt-2 text-xs text-[color:var(--ink-dim)]" id="countdown-label">até a próxima Sexta Cultural</p>
+    </div>
+
+    <!-- decorative stage card -->
+    <div class="relative hidden md:block">
+      <div class="ticket-card rounded-3xl p-6 rotate-2 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs uppercase tracking-widest text-[color:var(--ink-dim)]">Palco principal</span>
+          <span class="flex items-center gap-1 text-xs font-semibold" style="color:var(--green)">
+            <span class="w-2 h-2 rounded-full bg-current animate-pulse"></span> ao vivo toda sexta
+          </span>
+        </div>
+        <svg viewBox="0 0 300 200" class="w-full rounded-xl">
+          <rect width="300" height="200" fill="#0b0518"/>
+          <circle cx="60" cy="40" r="26" fill="var(--pink)" opacity="0.5" filter="blur(1px)"/>
+          <circle cx="150" cy="30" r="20" fill="var(--blue)" opacity="0.5"/>
+          <circle cx="230" cy="45" r="22" fill="var(--green)" opacity="0.45"/>
+          <path d="M20 170 C 80 120, 220 190, 280 130" stroke="var(--pink)" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.85"/>
+          <path d="M10 150 C 90 190, 200 100, 290 160" stroke="var(--blue)" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <text x="150" y="105" text-anchor="middle" font-family="Permanent Marker" font-size="30" fill="#f4eeff">Barcelona</text>
+        </svg>
+        <p class="mt-4 text-sm text-[color:var(--ink-dim)]">Sanfona, zabumba e triângulo tocando forte na praça — o point da sexta-feira.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="border-y border-white/5 py-3 overflow-hidden" style="background:var(--night-2)">
+  <div class="marquee-track whitespace-nowrap text-sm font-semibold tracking-wide text-[color:var(--ink-dim)]">
+    <span class="mx-6">🎤 MÚSICA AO VIVO</span>
+    <span class="mx-6" style="color:var(--pink)">•</span>
+    <span class="mx-6">💃 FORRÓ NA PRAÇA</span>
+    <span class="mx-6" style="color:var(--blue)">•</span>
+    <span class="mx-6">🎉 ENTRADA GRATUITA</span>
+    <span class="mx-6" style="color:var(--green)">•</span>
+    <span class="mx-6">👨‍👩‍👧‍👦 EVENTO PARA TODA FAMÍLIA</span>
+    <span class="mx-6" style="color:var(--amber)">•</span>
+    <span class="mx-6">🎤 MÚSICA AO VIVO</span>
+    <span class="mx-6" style="color:var(--pink)">•</span>
+    <span class="mx-6">💃 FORRÓ NA PRAÇA</span>
+    <span class="mx-6" style="color:var(--blue)">•</span>
+    <span class="mx-6">🎉 ENTRADA GRATUITA</span>
+    <span class="mx-6" style="color:var(--green)">•</span>
+    <span class="mx-6">👨‍👩‍👧‍👦 EVENTO PARA TODA FAMÍLIA</span>
+    <span class="mx-6" style="color:var(--amber)">•</span>
+  </div>
+</div>
+
+<!-- SOBRE -->
+<section id="sobre" class="py-20 sm:py-28 px-5 sm:px-8">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <p class="uppercase tracking-[0.3em] text-xs font-semibold mb-3" style="color:var(--blue)">O que é</p>
+      <h2 class="font-brush text-4xl sm:text-5xl mb-6" style="color:var(--ink)">A festa da <span style="color:var(--green)">nossa</span> gente</h2>
+      <p class="text-[color:var(--ink-dim)] leading-relaxed mb-4">
+        A Sexta Cultural é o encontro semanal que transforma a praça de Barcelona-RN em point de música, dança e convivência.
+        Uma iniciativa para valorizar os artistas da região e dar à população um espaço de lazer gratuito, seguro e para todas as idades.
+      </p>
+      <p class="text-[color:var(--ink-dim)] leading-relaxed">
+        A cada mês em uma sexta, uma banda diferente sobe ao palco para animar a noite com forró, música regional e muito repertório popular.
+      </p>
+      <div class="grid grid-cols-3 gap-4 mt-8">
+        <div class="text-center">
+          <p class="font-brush text-3xl" style="color:var(--pink)">100%</p>
+          <p class="text-xs text-[color:var(--ink-dim)] mt-1">gratuito</p>
+        </div>
+        <div class="text-center">
+          <p class="font-brush text-3xl" style="color:var(--blue)">1x</p>
+          <p class="text-xs text-[color:var(--ink-dim)] mt-1">por mês</p>
+        </div>
+        <div class="text-center">
+          <p class="font-brush text-3xl" style="color:var(--amber)">∞</p>
+          <p class="text-xs text-[color:var(--ink-dim)] mt-1">alegria</p>
+        </div>
+      </div>
+    </div>
+    <div class="relative">
+      <div class="ticket-card rounded-3xl p-8 -rotate-1">
+        <svg viewBox="0 0 320 220" class="w-full">
+          <rect width="320" height="220" rx="14" fill="#0b0518"/>
+          <circle cx="50" cy="35" r="18" fill="var(--pink)" opacity="0.55"/>
+          <circle cx="270" cy="40" r="20" fill="var(--blue)" opacity="0.5"/>
+          <circle cx="160" cy="25" r="14" fill="var(--green)" opacity="0.5"/>
+          <path d="M15 190 Q 100 150 160 185 T 305 175" stroke="var(--amber)" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <rect x="40" y="120" width="10" height="60" rx="3" fill="#e7dcff"/>
+          <rect x="60" y="100" width="10" height="80" rx="3" fill="#e7dcff" opacity="0.85"/>
+          <rect x="80" y="130" width="10" height="50" rx="3" fill="#e7dcff" opacity="0.7"/>
+          <text x="160" y="115" text-anchor="middle" font-family="Permanent Marker" font-size="24" fill="#f4eeff">na praça,</text>
+          <text x="160" y="145" text-anchor="middle" font-family="Permanent Marker" font-size="24" fill="#f4eeff">com a nossa gente</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMAÇÃO -->
+<section id="programacao" class="py-20 sm:py-28 px-5 sm:px-8" style="background:var(--night-2)">
+  <div class="max-w-6xl mx-auto">
+    <p class="uppercase tracking-[0.3em] text-xs font-semibold mb-3 text-center" style="color:var(--pink)">Agenda</p>
+    <h2 class="font-brush text-4xl sm:text-5xl text-center mb-14" style="color:var(--ink)">Programação da noite</h2>
+
+    <div class="grid sm:grid-cols-3 gap-6">
+      <div class="ticket-card rounded-2xl p-6">
+        <p class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--green)">20h00</p>
+        <h3 class="font-semibold text-lg mb-2">Abertura da praça</h3>
+        <p class="text-sm text-[color:var(--ink-dim)]">Barracas de comida e bebida abrem, som ambiente e chegada do público.</p>
+      </div>
+      <div class="ticket-card rounded-2xl p-6 border-2" style="border-color:var(--pink)">
+        <p class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--pink)">21h00</p>
+        <h3 class="font-semibold text-lg mb-2">Banda ao vivo</h3>
+        <p class="text-sm text-[color:var(--ink-dim)]">A atração da semana sobe ao palco com forró e os maiores sucessos populares.</p>
+      </div>
+      <div class="ticket-card rounded-2xl p-6">
+        <p class="text-xs font-bold uppercase tracking-wide mb-2" style="color:var(--blue)">22h00</p>
+        <h3 class="font-semibold text-lg mb-2">Encerramento</h3>
+        <p class="text-sm text-[color:var(--ink-dim)]">Última música da noite e até a próxima sexta!</p>
+      </div>
+    </div>
+
+    <div class="mt-10 ticket-card rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-wide text-[color:var(--ink-dim)] mb-1">Atração desta semana</p>
+        <p class="font-brush text-2xl" style="color:var(--amber)">A definir — fique de olho no Instagram</p>
+      </div>
+      <a href="#contato" class="btn-glow whitespace-nowrap rounded-full px-5 py-2.5 font-semibold border border-white/20 hover:bg-white/10 transition">
+        Quero indicar uma banda
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- LOCAL -->
+<section id="local" class="py-20 sm:py-28 px-5 sm:px-8">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+    <div>
+      <p class="uppercase tracking-[0.3em] text-xs font-semibold mb-3" style="color:var(--green)">Onde encontrar a festa</p>
+      <h2 class="font-brush text-4xl sm:text-5xl mb-6" style="color:var(--ink)">Praça central, <span style="color:var(--blue)">Barcelona-RN</span></h2>
+      <ul class="space-y-4 text-[color:var(--ink-dim)]">
+        <li class="flex gap-3"><span>📅</span><span>Toda sexta-feira, a partir das 19h</span></li>
+        <li class="flex gap-3"><span>📍</span><span>Praça principal do centro de Barcelona/RN</span></li>
+        <li class="flex gap-3"><span>🎟️</span><span>Entrada gratuita — evento aberto ao público</span></li>
+      </ul>
+      <a href="https://www.google.com/maps/search/Barcelona+RN" target="_blank" rel="noopener"
+         class="btn-glow mt-8 inline-flex items-center gap-2 rounded-full px-6 py-3 font-bold" style="background:var(--amber); color:#1a0d00">
+        Abrir no Google Maps ↗
+      </a>
+    </div>
+    <div class="ticket-card rounded-3xl overflow-hidden">
+      <iframe
+        title="Mapa de Barcelona, RN"
+        src="https://www.google.com/maps?q=Barcelona,RN,Brazil&output=embed"
+        class="w-full h-72 sm:h-96 border-0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO / CTA -->
+<section id="contato" class="py-20 sm:py-28 px-5 sm:px-8" style="background:var(--night-2)">
+  <div class="max-w-3xl mx-auto text-center">
+    <h2 class="font-brush text-4xl sm:text-5xl mb-4" style="color:var(--ink)">Chegou a <span style="color:var(--pink)">sexta</span>?</h2>
+    <p class="text-[color:var(--ink-dim)] mb-8">Fale com a organização, envie sugestões de banda ou tire suas dúvidas sobre o evento.</p>
+
+    <form id="contactForm" class="grid sm:grid-cols-2 gap-4 text-left">
+      <input required type="text" placeholder="Seu nome" class="rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:border-[color:var(--pink)] transition placeholder:text-[color:var(--ink-dim)]">
+      <input required type="tel" placeholder="WhatsApp" class="rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:border-[color:var(--blue)] transition placeholder:text-[color:var(--ink-dim)]">
+      <textarea required placeholder="Sua mensagem" rows="4" class="sm:col-span-2 rounded-xl bg-white/5 border border-white/10 px-4 py-3 outline-none focus:border-[color:var(--green)] transition placeholder:text-[color:var(--ink-dim)]"></textarea>
+      <button type="submit" class="btn-glow sm:col-span-2 rounded-full px-6 py-3 font-bold" style="background:var(--amber); color:#1a0d00">
+        Enviar mensagem
+      </button>
+    </form>
+    <p id="formFeedback" class="mt-4 text-sm font-semibold hidden" style="color:var(--green)"></p>
+
+    <div class="mt-10 flex justify-center gap-5 text-2xl">
+      <a href="#" aria-label="Instagram" class="hover:opacity-70 transition">📸</a>
+      <a href="#" aria-label="WhatsApp" class="hover:opacity-70 transition">💬</a>
+      <a href="#" aria-label="Facebook" class="hover:opacity-70 transition">👍</a>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-white/5" style="background:var(--night-2)">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-14 grid md:grid-cols-2 gap-8 items-center">
+    <div>
+      <p class="uppercase tracking-[0.3em] text-xs font-semibold mb-2" style="color:var(--amber)">Não perca nenhuma sexta</p>
+      <h3 class="font-brush text-2xl sm:text-3xl mb-2" style="color:var(--ink)">Receba por e-mail quem toca na próxima Sexta Cultural</h3>
+      <p class="text-sm text-[color:var(--ink-dim)]">Sem spam — só o aviso da banda e da programação da semana.</p>
+    </div>
+    <form id="newsletterForm" class="flex flex-col sm:flex-row gap-3">
+      <label for="newsletterEmail" class="sr-only">Seu e-mail</label>
+      <input id="newsletterEmail" required type="email" placeholder="seuemail@exemplo.com"
+             class="flex-1 rounded-full bg-white/5 border border-white/10 px-5 py-3 text-sm outline-none focus:border-[color:var(--blue)] transition placeholder:text-[color:var(--ink-dim)]">
+      <button type="submit" class="btn-glow whitespace-nowrap rounded-full px-6 py-3 font-bold text-sm" style="background:var(--amber); color:#1a0d00">
+        Quero receber
+      </button>
+    </form>
+  </div>
+  <p id="newsletterFeedback" class="hidden text-center text-sm font-semibold pb-6" style="color:var(--green)"></p>
+ 
+  <div class="border-t border-white/5 py-6 px-5 sm:px-8 text-center text-xs text-[color:var(--ink-dim)]">
+    <p>Sexta Cultural — Barcelona/RN. Feito com carinho para valorizar a cultura da nossa cidade.</p>
+  </div>
+</footer>
+<a id="whatsappShare"
+   href="https://wa.me/?text=Vem%20pra%20Sexta%20Cultural%20de%20Barcelona%2FRN!%20%F0%9F%8E%B6%20Toda%20sexta%2C%20m%C3%BAsica%20ao%20vivo%20e%20forr%C3%B3%20de%20gra%C3%A7a%20na%20pra%C3%A7a."
+   target="_blank" rel="noopener" aria-label="Compartilhar no WhatsApp"
+   class="fixed bottom-20 right-6 z-50 rounded-full w-12 h-12 flex items-center justify-center text-2xl btn-glow"
+   style="background:#25D366; color:#fff">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+<button id="backToTop" aria-label="Voltar ao topo" class="fixed bottom-6 right-6 z-50 rounded-full w-11 h-11 flex items-center justify-center text-lg opacity-0 pointer-events-none transition-opacity duration-300 btn-glow" style="background:var(--pink); color:#fff">
+  ↑
+</button>
+
+<script>
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  let menuOpen = false;
+  menuBtn.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    menuBtn.setAttribute('aria-expanded', String(menuOpen));
+    if (menuOpen) {
+      mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+      mobileMenu.style.opacity = '1';
+      menuBtn.textContent = '✕';
+    } else {
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.style.opacity = '0';
+      menuBtn.textContent = '☰';
+    }
+  });
+  document.querySelectorAll('#mobileMenu a').forEach(a => {
+    a.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.style.maxHeight = '0px';
+      mobileMenu.style.opacity = '0';
+      menuBtn.textContent = '☰';
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Countdown to next Friday 19:00 local time
+  function nextFriday19h() {
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(19, 0, 0, 0);
+    let diff = 5 - now.getDay(); // 5 = Friday
+    if (diff < 0 || (diff === 0 && now >= target)) diff += 7;
+    target.setDate(now.getDate() + diff);
+    return target;
+  }
+
+  function updateCountdown() {
+    const target = nextFriday19h();
+    const now = new Date();
+    let ms = target - now;
+    if (ms < 0) ms = 0;
+
+    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((ms / (1000 * 60)) % 60);
+    const secs = Math.floor((ms / 1000) % 60);
+
+    document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Contact form (demo — no backend wired up)
+  const form = document.getElementById('contactForm');
+  const feedback = document.getElementById('formFeedback');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    feedback.textContent = 'Mensagem pronta! Conecte este formulário ao seu WhatsApp ou e-mail para receber os envios.';
+    feedback.classList.remove('hidden');
+    form.reset();
+  });
+
+  // Back to top button
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {
+      backToTop.style.opacity = '1';
+      backToTop.style.pointerEvents = 'auto';
+    } else {
+      backToTop.style.opacity = '0';
+      backToTop.style.pointerEvents = 'none';
+    }
+  });
+  backToTop.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+</script>
+
+</body>
+</html>
